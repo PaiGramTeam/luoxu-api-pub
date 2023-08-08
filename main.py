@@ -18,20 +18,25 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-groups_id = [1366383997, 1797471403]
+groups_id = [1366383997, 1797471403, 1936247070]
 groups = {
-  "groups": [
-    {
-      "group_id": "1366383997",
-      "name": "原神 · 提瓦特大陆",
-      "pub_id": "GenshinImpact"
-    },
-    {
-      "group_id": "1797471403",
-      "name": "崩坏：星穹铁道 · 仙舟：罗浮",
-      "pub_id": "HSRCN_Group"
-    }
-  ]
+    "groups": [
+        {
+            "group_id": "1366383997",
+            "name": "原神 · 提瓦特大陆",
+            "pub_id": "GenshinImpact"
+        },
+        {
+            "group_id": "1797471403",
+            "name": "崩坏：星穹铁道 · 仙舟：罗浮",
+            "pub_id": "HSRCN_Group"
+        },
+        {
+            "group_id": "1936247070",
+            "name": "绝区零 · 新艾利都",
+            "pub_id": "ZZZGroups"
+        }
+    ]
 }
 
 
@@ -77,7 +82,6 @@ async def redirect_to_html():
 
 
 app.mount("/", StaticFiles(directory="html"), name="html")
-
 
 if __name__ == "__main__":
     import uvicorn
