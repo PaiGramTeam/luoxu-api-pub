@@ -1,3 +1,5 @@
+from typing import Union
+
 from fastapi import FastAPI
 from httpx import AsyncClient
 from starlette.middleware.cors import CORSMiddleware
@@ -8,6 +10,7 @@ from starlette.staticfiles import StaticFiles
 app = FastAPI()
 local_api = "http://127.0.0.1:9008/luoxu/"
 local_stats_api = "http://127.0.0.1:9010/api/"
+ghost_url = "https://search-pub.xtaolabs.com/luoxu/avatar/ghost.jpg"
 allowed_origins = [
     "search-pub.xtaolabs.com",
     "127.0.0.1:9009",
@@ -72,9 +75,11 @@ async def get_names(request: Request):
 
 
 @app.get("/luoxu/avatar/{avatar}")
-async def read_avatar(avatar: str) -> StreamingResponse:
+async def read_avatar(avatar: str):
     async with AsyncClient(timeout=60) as client:
         r = await client.get(f"{local_api}avatar/{avatar}")
+        if r.status_code:
+            return RedirectResponse(url=ghost_url)
         return StreamingResponse(r.aiter_bytes(), media_type="image/png")
 
 
