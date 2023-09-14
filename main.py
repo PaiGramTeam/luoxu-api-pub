@@ -78,7 +78,7 @@ async def get_names(request: Request):
 async def read_avatar(avatar: str):
     async with AsyncClient(timeout=60) as client:
         r = await client.get(f"{local_api}avatar/{avatar}")
-        if r.status_code:
+        if r.status_code == 307:
             return RedirectResponse(url=ghost_url)
         return StreamingResponse(r.aiter_bytes(), media_type="image/png")
 
