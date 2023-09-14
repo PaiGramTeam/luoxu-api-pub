@@ -7,6 +7,7 @@ from starlette.staticfiles import StaticFiles
 
 app = FastAPI()
 local_api = "http://127.0.0.1:9008/luoxu/"
+local_stats_api = "http://127.0.0.1:9010/api/"
 allowed_origins = [
     "search-pub.xtaolabs.com",
     "127.0.0.1:9009",
@@ -19,6 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 groups_id = [1366383997, 1797471403, 1936247070]
+groups_stats_id = [-1001797471403]
 groups = {
     "groups": [
         {
@@ -74,6 +76,18 @@ async def read_avatar(avatar: str) -> StreamingResponse:
     async with AsyncClient(timeout=60) as client:
         r = await client.get(f"{local_api}avatar/{avatar}")
         return StreamingResponse(r.aiter_bytes(), media_type="image/png")
+
+
+@app.get("/luoxu/stats/{gid}")
+async def read_avatar(gid: str):
+    try:
+        if int(gid) not in groups_stats_id:
+            return []
+    except Exception:
+        return []
+    async with AsyncClient(timeout=60) as client:
+        r = await client.get(f"{local_stats_api}group_analytics?cid={gid}")
+        return r.json()
 
 
 @app.get("/")

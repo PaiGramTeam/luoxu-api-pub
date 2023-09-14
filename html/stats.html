@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发言排行榜 - 星穹铁道</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css"
+          integrity="sha512-Z/def5z5u2aR89OuzYcxmDJ0Bnd5V1cKqBEbvLOiUNWdg9PQeXVvXLI90SE4QOHGlfLqUnDNVAYyZi8UwUTmWQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <style>
+        body {
+            background-color: #222;
+        }
+
+        .container {
+            text-align: center;
+            color: #fff;
+            margin-top: 50px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #333;
+        }
+
+        .user-info .user-name {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .user-info .user-name span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .username {
+            color: #1e90ff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>发言排行榜</h1>
+    <br/>
+    <h6 id="gname"></h6>
+    <br/>
+
+    <div class="row">
+        <div class="col" id="col">
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const gdata = {
+        "-1001797471403": "崩坏：星穹铁道 · 仙舟：罗浮",
+    }
+    const gname = document.getElementById("gname")
+    const gid = location.search.split("=")[1]
+    gname.innerText = gdata[gid]
+    const col = document.getElementById("col")
+
+    function createUserDom(data) {
+        let userDom = document.createElement("div")
+        userDom.className = "user-info"
+        let avatar = document.createElement("img")
+        avatar.className = "avatar"
+        avatar.src = `luoxu/avatar/${data.user_id}.jpg`
+        let userInfo = document.createElement("div")
+        let userName = document.createElement("div")
+        userName.className = "user-name username"
+        let userNameSpan = document.createElement("span")
+        userNameSpan.innerText = data.name
+        let userMessage = document.createElement("div")
+        userMessage.className = "user-name"
+        let userMessageSpan = document.createElement("span")
+        userMessageSpan.innerText = `${data.messages} 条消息，平均每条消息 ${data.avg_chars} 个字符`
+        userName.appendChild(userNameSpan)
+        userMessage.appendChild(userMessageSpan)
+        userInfo.appendChild(userName)
+        userInfo.appendChild(userMessage)
+        userDom.appendChild(avatar)
+        userDom.appendChild(userInfo)
+        return userDom
+    }
+
+    fetch(`luoxu/stats/${gid}`)
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(user => {
+                col.appendChild(createUserDom(user))
+            })
+        })
+</script>
+</body>
+</html>
