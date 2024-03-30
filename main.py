@@ -1,7 +1,7 @@
 from typing import Union
 
 from fastapi import FastAPI
-from httpx import AsyncClient
+from httpx import AsyncClient, ReadTimeout
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import StreamingResponse, RedirectResponse
@@ -77,7 +77,10 @@ async def get_names(request: Request):
 @app.get("/luoxu/avatar/{avatar}")
 async def read_avatar(avatar: str):
     async with AsyncClient(timeout=60) as client:
-        r = await client.get(f"{local_api}avatar/{avatar}")
+        try:
+            r = await client.get(f"{local_api}avatar/{avatar}")
+        except ReadTimeout:
+            return RedirectResponse(url=ghost_url)
         if r.status_code == 307:
             return RedirectResponse(url=ghost_url)
         return StreamingResponse(r.aiter_bytes(), media_type="image/png")
