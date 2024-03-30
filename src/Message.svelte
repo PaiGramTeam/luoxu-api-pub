@@ -26,7 +26,7 @@
   let relative_dt = format_relative_time(dt, now);
   let iso_date = dt.toISOString();
   let msgurl = groupinfo[msg.group_id][0]
-    ? `tg://resolve?domain=${groupinfo[msg.group_id][0]}&post=${msg.id}`
+    ? `https://t.me/${groupinfo[msg.group_id][0]}/${msg.id}`
     : `tg://privatepost?channel=${msg.group_id}&post=${msg.id}`;
 
   function format_relative_time(d1: Date, d2: Date) {

@@ -268,6 +268,7 @@
 </main>
 
 <style>
+
   main {
     margin: 1em;
   }
@@ -286,6 +287,14 @@
   }
   #searchbox input[type="search"] {
     flex-grow: 1;
+  }
+  #searchbox select,
+   #searchbox input[type="search"],
+   #searchbox > div > input {
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    color: var(--tg-theme-text-color, #222222);
+    border: 1px solid var(--tg-theme-link-color, #000);
+    border-radius: 4px;
   }
   @media (max-width: 700px) {
     #searchbox {
