@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from httpx import AsyncClient, ReadTimeout
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-from starlette.responses import StreamingResponse, RedirectResponse
+from starlette.responses import StreamingResponse, RedirectResponse, PlainTextResponse
 from starlette.staticfiles import StaticFiles
 
 app = FastAPI()
@@ -101,6 +101,16 @@ async def read_avatar(gid: str):
 @app.get("/")
 async def redirect_to_html():
     return RedirectResponse(url="/index.html")
+
+
+class JSResponse(PlainTextResponse):
+    media_type = "text/javascript"
+
+
+@app.get("/telegram-web-app.js", response_class=JSResponse)
+async def get_telegram_web_js():
+    async with AsyncClient(timeout=10) as client:
+        return (await client.get("https://telegram.org/js/telegram-web-app.js")).text
 
 
 app.mount("/", StaticFiles(directory="html"), name="html")
